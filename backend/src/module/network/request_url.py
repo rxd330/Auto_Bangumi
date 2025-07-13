@@ -39,10 +39,11 @@ class RequestURL:
 
     def post_url(self, url: str, data: dict, retry=3):
         try_time = 0
+        self.header["Content-Type"] = "application/json"
         while True:
             try:
                 req = self.session.post(
-                    url=url, headers=self.header, data=data, timeout=5
+                    url=url, headers=self.header, json=data, timeout=5
                 )
                 req.raise_for_status()
                 return req
@@ -59,6 +60,7 @@ class RequestURL:
                 break
         logger.error(f"[Network] Failed connecting to {url}")
         logger.warning("[Network] Please check DNS/Connection settings")
+        del self.header["Content-Type"]
         return None
 
     def check_url(self, url: str):

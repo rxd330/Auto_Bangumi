@@ -30,6 +30,9 @@ def getClient(type: str):
 class PostNotification:
     def __init__(self):
         Notifier = getClient(settings.notification.type)
+        if Notifier is None:
+            logger.error(f"Notification type {settings.notification.type} not found")
+            return None
         self.notifier = Notifier(
             token=settings.notification.token, chat_id=settings.notification.chat_id
         )
